@@ -1,0 +1,21 @@
+#!/bin/bash
+
+
+echo "
+welcome to
+
+freeform		publisher
+"
+
+source "./.freeform_env/bin/activate"
+pip install -r .requirements.txt
+yarn install
+
+python .release.py
+
+
+echo "
+Goodbye.
+
+We'll meet again.
+"

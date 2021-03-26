@@ -1,0 +1,42 @@
+#!/bin/bash
+
+
+default_pkg="yarn"
+default_env="dev"
+
+PKGM=${1:-$default_pkg}
+ENV=${2:-$default_env}
+
+echo "
+welcome to
+
+freeform_art
+
+Setting up using [$PKGM]
+@ [$ENV] environment
+"
+export freeform_PKG="$PKGM"
+export freeform_ENV="$ENV"
+
+supported_managers=(npm yarn)
+
+if (printf '%s\n' "${supported_managers[@]}" | grep -xq $PKGM); then
+	source "./.freeform_env/bin/activate"
+	pip install -r .requirements.txt
+	$PKGM install
+	$PKGM run dev
+else
+	echo "[ERROR] Please specify package manager:\n\n  eg. \n \t source setup yarn \n \t source setup npm"
+fi
+
+
+
+
+echo "
+
+
+
+Goodbye.
+
+We'll meet again.
+"
