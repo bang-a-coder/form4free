@@ -22,6 +22,13 @@ export function createForm(...params){
             if (index == params.length-1){
                 return
             }
+
+            if (ans.subQ){
+                return createQ(ans.subQ)
+
+            }
+
+            console.log('NEXTQ',ans.nextQ)
             index++
 
              console.log(ans)

@@ -12,9 +12,9 @@ freeform.injectStyles()
 
 
 freeform.createForm(
-    ["QWERTYU?", 
-        "asdfg", 
-        "ASDFGH", 
+    ["What are you going to use Fready for?", 
+        "Work", 
+        "My own thing", 
         ["University", [
             'What discipline?',
             'Lay',
@@ -22,15 +22,11 @@ freeform.createForm(
             'Stem'
         ]]
     ], 
-    ["QWERTYU?", 
-    "asdfg", 
-    "ASDFGH", 
-    ["University", [
-        'What discipline?',
-        'Lay',
-        "Gay",
-        'Stem'
-    ]]
+    ["What are you seeking to improve?", 
+    "Focus", 
+    "Time", 
+    "Comprehension",
+    "IDK"
  ])
 
 

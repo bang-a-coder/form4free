@@ -1,8 +1,10 @@
 import {_p,_e, util, Pragma} from 'pragmajs'
 
-const Answer = (content) => _p().as(_e(`
-    <div class="answer">${content}</div>
-`.trim()))
+const Answer = (content,subQ) => _p()
+                                    .as(_e(`<div class="answer">${content}</div>`.trim()))
+                                    .run(function() {
+                                        this.subQ = subQ
+                                    })
 
 const Template = (pragma) => `
     <div class="quetion" id="${pragma.key}">
@@ -18,6 +20,7 @@ export class Question extends Pragma {
         this.title = title
         this.answers = []
 
+
         this.createEvent('answer')
         this.createAnswers(answers)
         this.as(Template(this))
@@ -29,8 +32,15 @@ export class Question extends Pragma {
 
     createAnswers(answerList){
         answerList.forEach(element => {
+            let content = element
+            let subQ
+            if (Array.isArray(content)){
+                content = content[0]
+                subQ = element[1]
+            }
+
             self = this
-            let answer = Answer(element)
+            let answer = Answer(content,subQ)
                             answer.listenTo('click', function(){
                 self.triggerEvent('answer', answer)
             })
