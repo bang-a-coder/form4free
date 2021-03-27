@@ -10,24 +10,35 @@ freeform.injectStyles()
 // ],
 // })
 
+const end = `
+<div class='end-message'>
+    <h1> Thanks for participating </h1>
+</div>
+`
 
 freeform.createForm(
     ["@Persona What are you going to use Fready for?", 
-        "$university Work", 
-        "My own thing", 
-        ["University", [
+        "$work Work", 
+        "$bigbrain My own thing", 
+        ["$university University", [
             '@UniDiscipline What discipline?',
-            'Lay',
-            "Gay",
-            'Stem'
+            '$social Social Sciences',
+            "$stem STEM",
+            '$money Economics',
+            '$law Law',
+            '$art Art',
+            '$other Other'
         ]]
     ], 
     ["@Problem What are you seeking to improve?", 
-    "Focus", 
-    "Time", 
-    "Comprehension",
-    "IDK"
- ]).on('done', (results)=>console.log('DONEE', results))
+    "$focus Focus", 
+    "$time Time", 
+    "$comprehension Comprehension",
+    "$mountain I don't know"
+ ]).on('done', function(results) {
+     this.html(end)
+     console.log('DONEE', results)
+    })
 
 
 // freeform.ask(question).then(answer =>{
