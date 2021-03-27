@@ -2,12 +2,6 @@ import {_p,_e, util, Pragma} from 'pragmajs'
 import styles from './styles/styles.json'
 import {Question} from './pragmas/question'
 
-export function init(){
-    console.log('lick my ass')
-
-    util.addStyles(styles['styles'])
-}
-
 export function createForm(...params){
     let results = []
     console.log(params)

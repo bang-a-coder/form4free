@@ -151,12 +151,6 @@ class Question extends pragmajs.Pragma {
 
 }
 
-function init(){
-    console.log('lick my ass');
-
-    pragmajs.util.addStyles(styles$1['styles']);
-}
-
 function createForm(...params){
     let results = [];
     console.log(params);
@@ -211,5 +205,4 @@ function injectStyles(){
 }
 
 exports.createForm = createForm;
-exports.init = init;
 exports.injectStyles = injectStyles;

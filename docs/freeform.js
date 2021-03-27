@@ -1,4 +1,3 @@
-freeform.init()
 freeform.injectStyles()
 
 // freeform.create({

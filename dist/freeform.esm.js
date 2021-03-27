@@ -147,12 +147,6 @@ class Question extends Pragma {
 
 }
 
-function init(){
-    console.log('lick my ass');
-
-    util.addStyles(styles$1['styles']);
-}
-
 function createForm(...params){
     let results = [];
     console.log(params);
@@ -206,4 +200,4 @@ function injectStyles(){
 
 }
 
-export { createForm, init, injectStyles };
+export { createForm, injectStyles };

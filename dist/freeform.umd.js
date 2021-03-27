@@ -153,12 +153,6 @@
 
     }
 
-    function init(){
-        console.log('lick my ass');
-
-        O.addStyles(styles$1['styles']);
-    }
-
     function createForm(...params){
         let results = [];
         console.log(params);
@@ -213,7 +207,6 @@
     }
 
     exports.createForm = createForm;
-    exports.init = init;
     exports.injectStyles = injectStyles;
 
     Object.defineProperty(exports, '__esModule', { value: true });
