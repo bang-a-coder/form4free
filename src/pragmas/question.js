@@ -1,6 +1,6 @@
 import {_p,_e, util, Pragma} from 'pragmajs'
 
-const Answer = (content,subQ) => _p()
+const Answer = (content,subQ) => _p(content.toString())
                                     .as(_e(`<div class="answer">${content}</div>`.trim()))
                                     .run(function() {
                                         this.subQ = subQ
@@ -17,9 +17,10 @@ const Template = (pragma) => `
 export class Question extends Pragma {
     constructor(title, ...answers){
         super()
-        this.title = title
-        this.answers = []
-
+        this.title
+        this.answers = [] 
+        this.codeName
+        this.parseTitle(title)
 
         this.createEvent('answer')
         this.createAnswers(answers)
@@ -28,6 +29,14 @@ export class Question extends Pragma {
                 this.element.find('.answers').append(...this.answers)
             })
 
+    }
+
+    parseTitle(title){
+        if (title[0]!= '@') return this.title=title
+
+        this.codeName =  title.substring(0,title.indexOf(" "))
+        this.title = title.substring(title.indexOf(" "),title.length)
+        console.log(this.codeName,this.title)
     }
 
     createAnswers(answerList){
@@ -42,11 +51,13 @@ export class Question extends Pragma {
             self = this
             let answer = Answer(content,subQ)
                             answer.listenTo('click', function(){
-                self.triggerEvent('answer', answer)
-            })
+                                self.triggerEvent('answer', answer)
+                                
+                            })
+
             this.answers.push(answer)
 
-        });
+        })
 
         console.log(answerList)
     }

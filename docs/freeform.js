@@ -12,22 +12,22 @@ freeform.injectStyles()
 
 
 freeform.createForm(
-    ["What are you going to use Fready for?", 
+    ["@Persona What are you going to use Fready for?", 
         "Work", 
         "My own thing", 
         ["University", [
-            'What discipline?',
+            '@UniDiscipline What discipline?',
             'Lay',
             "Gay",
             'Stem'
         ]]
     ], 
-    ["What are you seeking to improve?", 
+    ["@Problem What are you seeking to improve?", 
     "Focus", 
     "Time", 
     "Comprehension",
     "IDK"
- ])
+ ]).on('done', (results)=>console.log('DONEE', results))
 
 
 // freeform.ask(question).then(answer =>{

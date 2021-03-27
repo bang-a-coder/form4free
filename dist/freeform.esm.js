@@ -5,7 +5,7 @@ var styles$1 = {
 	styles: styles
 };
 
-const Answer = (content,subQ) => _p()
+const Answer = (content,subQ) => _p(content.toString())
                                     .as(_e(`<div class="answer">${content}</div>`.trim()))
                                     .run(function() {
                                         this.subQ = subQ;
@@ -22,9 +22,10 @@ const Template = (pragma) => `
 class Question extends Pragma {
     constructor(title, ...answers){
         super();
-        this.title = title;
-        this.answers = [];
-
+        this.title;
+        this.answers = []; 
+        this.codeName;
+        this.parseTitle(title);
 
         this.createEvent('answer');
         this.createAnswers(answers);
@@ -33,6 +34,14 @@ class Question extends Pragma {
                 this.element.find('.answers').append(...this.answers);
             });
 
+    }
+
+    parseTitle(title){
+        if (title[0]!= '@') return this.title=title
+
+        this.codeName =  title.substring(0,title.indexOf(" "));
+        this.title = title.substring(title.indexOf(" "),title.length);
+        console.log(this.codeName,this.title);
     }
 
     createAnswers(answerList){
@@ -47,8 +56,10 @@ class Question extends Pragma {
             self = this;
             let answer = Answer(content,subQ);
                             answer.listenTo('click', function(){
-                self.triggerEvent('answer', answer);
-            });
+                                self.triggerEvent('answer', answer);
+                                
+                            });
+
             this.answers.push(answer);
 
         });
@@ -69,23 +80,32 @@ function init(){
 }
 
 function createForm(...params){
-
+    let results = [];
     console.log(params);
-    let parent = _p('parentPragma')
-                    .as(_e('div.parent#'))
-                    .appendTo('body');
+    let form = _p('formPragma')
+                    .as(_e('div.form#'))
+                    .appendTo('body')
+                    .createEvents('done', 'update', 'start');
 
     let index = 0;
     function createQ(question){
-        new Question(...question).appendTo(parent).on('answer', (ans) => {
+        
+        new Question(...question).appendTo(form).on('answer', (ans) => {
+            if (index == 0) {form.triggerEvent('started', ans);}
+            results.push({[question[0]]: ans.key});
+            form.triggerEvent('update', results);
+            console.log("RESUKTS",results);
             if (index == params.length-1){
-                return
+                form.triggerEvent('done', results);
+                return 
             }
 
             if (ans.subQ){
                 return createQ(ans.subQ)
 
             }
+
+           
 
             console.log('NEXTQ',ans.nextQ);
             index++;
@@ -97,7 +117,7 @@ function createForm(...params){
     }
 
     createQ(params[0]);
-
+    return form
 }
 
 function injectStyles(){

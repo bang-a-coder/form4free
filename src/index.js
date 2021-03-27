@@ -10,23 +10,32 @@ export function init(){
 }
 
 export function createForm(...params){
-
+    let results = []
     console.log(params)
-    let parent = _p('parentPragma')
-                    .as(_e('div.parent#'))
+    let form = _p('formPragma')
+                    .as(_e('div.form#'))
                     .appendTo('body')
+                    .createEvents('done', 'update', 'start')
 
     let index = 0
     function createQ(question){
-        let q = new Question(...question).appendTo(parent).on('answer', (ans) => {
+        
+        let q = new Question(...question).appendTo(form).on('answer', (ans) => {
+            if (index == 0) {form.triggerEvent('started', ans)}
+            results.push({[question[0]]: ans.key})
+            form.triggerEvent('update', results)
+            console.log("RESUKTS",results)
             if (index == params.length-1){
-                return
+                form.triggerEvent('done', results)
+                return 
             }
 
             if (ans.subQ){
                 return createQ(ans.subQ)
 
             }
+
+           
 
             console.log('NEXTQ',ans.nextQ)
             index++
@@ -38,7 +47,7 @@ export function createForm(...params){
     }
 
     createQ(params[0])
-
+    return form
 }
 
 export function injectStyles(){
