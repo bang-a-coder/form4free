@@ -12,42 +12,47 @@ export function createForm(...params){
 
     let index = 0
     let currentQuestion = null
-    function createQ(question){
+    async function createQ(question){
         
         // remove previous question
-        if (currentQuestion) currentQuestion.element.hide()
-        
-        setTimeout(() => {
-            
-        }, 3000);
+        if (currentQuestion) {
+                
+                console.log('hiding')
+            await fadeTo(currentQuestion.element, 500, 0)
+        }
 
-        currentQuestion = new Question(...question).appendTo(form).on('answer', (ans) => {
-            if (index == 0) {form.triggerEvent('started', ans)}
-            results.push({[currentQuestion.codeName ?? question[0]]: ans.key})
-            form.triggerEvent('update', results)
-            console.log("RESUKTS",results)
-            if (index == params.length-1){
-                form.triggerEvent('done', results)
-                return 
-            }
+        currentQuestion = new Question(...question)
+                        .css('opacity 0')
+                        .run(function(){
+                            fadeTo(this.element, 5000, 1)
+                        })
+                        .appendTo(form)
+                        .on('answer', (ans) => {
+                            if (index == 0) {form.triggerEvent('started', ans)}
+                            results.push({[currentQuestion.codeName ?? question[0]]: ans.key})
+                            form.triggerEvent('update', results)
+                            console.log("RESUKTS",results)
+                            if (index == params.length-1){
+                                form.triggerEvent('done', results)
+                                return 
+                            }
 
-            if (ans.subQ){
-                return createQ(ans.subQ)
+                            if (ans.subQ){
+                                return createQ(ans.subQ)
 
-            }
+                            }
 
-           
+                        
 
-            console.log('NEXTQ',ans.nextQ)
-            index++
+                            console.log('NEXTQ',ans.nextQ)
+                            index++
 
-            console.log(ans)
-            createQ(params[index]) 
+                            console.log(ans)
+                            createQ(params[index]) 
 
-        })
+                        })
 
 
-        currentQuestion.element.show()
     }
 
     createQ(params[0])
@@ -57,5 +62,20 @@ export function createForm(...params){
 export function injectStyles(){
     util.addStyles(styles['styles'])
 
+}
+
+function fadeTo(element, timeout, opacity) {
+    return new Promise((resolve,reject)=> {
+        console.log(timeout)
+        element.css(`
+            transition: all ${timeout/1000}s ease;
+            opacity: ${opacity};
+        `)
+        setTimeout(() => {
+            if (opacity == 0) element.hide()
+
+            resolve()
+        }, timeout);
+    })
 }
  

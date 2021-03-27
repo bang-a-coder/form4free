@@ -1,6 +1,6 @@
 import { Pragma, _p, _e, util } from 'pragmajs';
 
-var styles = "@charset \"utf-8\";@import url(https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;700&family=IBM+Plex+Sans:wght@300;400;700&display=swap);body{background-color:#161616}body h1{font-family:'IBM Plex Mono',monospace;color:whitesmoke;font-size:32px;font-weight:400}.parent{height:100vh;width:70%;margin:auto}.quetion{width:fit-content}.quetion .answers{width:80%;font-family:'IBM Plex Sans',sans-serif;color:whitesmoke}.quetion .answer{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:flex-start;align-items:center;align-content:stretch;font-size:22px;border-radius:4px;height:fit-content;padding:10px 10px;margin:15px 0;background:#262626;cursor:pointer;transition:all 160ms ease}.quetion .answer:hover{background:#393939}.quetion .answer.selected{background-color:#2b6cce}.quetion .answer .icon>svg{height:18px;margin-right:11px;opacity:.7}.end-message{color:whitesmoke}";
+var styles = "@charset \"utf-8\";@import url(https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;700&family=IBM+Plex+Sans:wght@300;400;700&display=swap);body{background-color:#161616}body h1{font-family:'IBM Plex Mono',monospace;color:whitesmoke;font-size:32px;font-weight:400}.parent{height:100vh;width:70%;margin:auto}.quetion{width:fit-content;max-width:550px}.quetion.completed{opacity:0}.quetion .answers{width:60%;font-family:'IBM Plex Sans',sans-serif;color:whitesmoke}.quetion .answer{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:flex-start;align-items:center;align-content:stretch;font-size:22px;border-radius:4px;height:fit-content;padding:10px 10px;margin:15px 0;background:#262626;cursor:pointer;transition:all 160ms ease}.quetion .answer:hover{background:#393939}.quetion .answer.selected{background-color:#2b6cce}.quetion .answer .icon>svg{height:18px;margin-right:11px;opacity:.7}.end-message{color:whitesmoke}";
 var styles$1 = {
 	styles: styles
 };
@@ -167,42 +167,47 @@ function createForm(...params){
 
     let index = 0;
     let currentQuestion = null;
-    function createQ(question){
+    async function createQ(question){
         
         // remove previous question
-        if (currentQuestion) currentQuestion.element.hide();
-        
-        setTimeout(() => {
-            
-        }, 3000);
+        if (currentQuestion) {
+                
+                console.log('hiding');
+            await fadeTo(currentQuestion.element, 500, 0);
+        }
 
-        currentQuestion = new Question(...question).appendTo(form).on('answer', (ans) => {
-            if (index == 0) {form.triggerEvent('started', ans);}
-            results.push({[currentQuestion.codeName ?? question[0]]: ans.key});
-            form.triggerEvent('update', results);
-            console.log("RESUKTS",results);
-            if (index == params.length-1){
-                form.triggerEvent('done', results);
-                return 
-            }
+        currentQuestion = new Question(...question)
+                        .css('opacity 0')
+                        .run(function(){
+                            fadeTo(this.element, 5000, 1);
+                        })
+                        .appendTo(form)
+                        .on('answer', (ans) => {
+                            if (index == 0) {form.triggerEvent('started', ans);}
+                            results.push({[currentQuestion.codeName ?? question[0]]: ans.key});
+                            form.triggerEvent('update', results);
+                            console.log("RESUKTS",results);
+                            if (index == params.length-1){
+                                form.triggerEvent('done', results);
+                                return 
+                            }
 
-            if (ans.subQ){
-                return createQ(ans.subQ)
+                            if (ans.subQ){
+                                return createQ(ans.subQ)
 
-            }
+                            }
 
-           
+                        
 
-            console.log('NEXTQ',ans.nextQ);
-            index++;
+                            console.log('NEXTQ',ans.nextQ);
+                            index++;
 
-            console.log(ans);
-            createQ(params[index]); 
+                            console.log(ans);
+                            createQ(params[index]); 
 
-        });
+                        });
 
 
-        currentQuestion.element.show();
     }
 
     createQ(params[0]);
@@ -212,6 +217,21 @@ function createForm(...params){
 function injectStyles(){
     util.addStyles(styles$1['styles']);
 
+}
+
+function fadeTo(element, timeout, opacity) {
+    return new Promise((resolve,reject)=> {
+        console.log(timeout);
+        element.css(`
+            transition: all ${timeout/1000}s ease;
+            opacity: ${opacity};
+        `);
+        setTimeout(() => {
+            if (opacity == 0) element.hide();
+
+            resolve();
+        }, timeout);
+    })
 }
 
 export { createForm, injectStyles };
