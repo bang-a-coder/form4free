@@ -46,7 +46,9 @@
         "dev-rollup": "rollup -c -w",
         "lint": "yarn run eslint src"
     },
-    "dependencies": {},
+    "dependencies": {
+        "pragmajs": "^0.7.4"
+    },
     "bugs": {
         "url": "https://github.com/robo-monk/lector/issues"
     },
