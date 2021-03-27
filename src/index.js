@@ -22,7 +22,7 @@ export function createForm(...params){
         
         let q = new Question(...question).appendTo(form).on('answer', (ans) => {
             if (index == 0) {form.triggerEvent('started', ans)}
-            results.push({[question[0]]: ans.key})
+            results.push({[q.codeName ?? question[0]]: ans.key})
             form.triggerEvent('update', results)
             console.log("RESUKTS",results)
             if (index == params.length-1){
