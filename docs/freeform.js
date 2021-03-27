@@ -13,7 +13,7 @@ freeform.injectStyles()
 
 freeform.createForm(
     ["@Persona What are you going to use Fready for?", 
-        "Work", 
+        "$university Work", 
         "My own thing", 
         ["University", [
             '@UniDiscipline What discipline?',

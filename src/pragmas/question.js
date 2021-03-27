@@ -1,7 +1,43 @@
 import {_p,_e, util, Pragma} from 'pragmajs'
+import icons from '../icons.json'
 
-const Answer = (content,subQ) => _p(content.toString())
-                                    .as(_e(`<div class="answer">${content}</div>`.trim()))
+function parseTag(content, decorator){
+            if (content[0]!= decorator) return {
+                content: content,
+                tag: null
+            }
+
+            return {
+                tag: content.substring(0, content.indexOf(" ")),
+                content: content.substring(content.indexOf(" ")+1, content.length)     
+            }
+
+        }
+        
+function parseAnswerContent(content){
+    const data = parseTag(content, "$")
+    console.log('parsed', data)
+
+    this.content = data.content
+    this.icon = data.tag?.substring(1)
+}
+const Answer = (content,subQ) => _p()
+                                    .run(function(){
+                                        parseAnswerContent.bind(this)(content)
+
+
+                                        console.log(this)
+                                        this.key = this.content
+
+                                        this.as(_e(`<div class="answer">
+                                            <div id='content'>${this.content}</div>
+                                        </div>`.trim()))
+
+                                        if (this.icon){
+                                            let icon = icons[this.icon]
+                                            icon && this.prepend(_e("div.icon#").html(icon))
+                                        }
+                                    })
                                     .run(function() {
                                         this.subQ = subQ
                                     })
@@ -32,11 +68,13 @@ export class Question extends Pragma {
     }
 
     parseTitle(title){
-        if (title[0]!= '@') return this.title=title
+        
+        
+        const data = parseTag(title, '@')
+        if (!data.tag) return this.title=title
 
-        this.codeName =  title.substring(0,title.indexOf(" "))
-        this.title = title.substring(title.indexOf(" "),title.length)
-        console.log(this.codeName,this.title)
+        this.codeName =  data.tag
+        this.title = data.content
     }
 
     createAnswers(answerList){
@@ -49,10 +87,10 @@ export class Question extends Pragma {
             }
 
             self = this
-            let answer = Answer(content,subQ)
+            let answer = Answer(content, subQ)
                             answer.listenTo('click', function(){
                                 self.triggerEvent('answer', answer)
-                                
+
                             })
 
             this.answers.push(answer)
