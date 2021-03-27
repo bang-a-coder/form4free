@@ -1,6 +1,6 @@
-freeform.injectStyles()
+form4free.injectStyles()
 
-// freeform.create({
+// form4free.create({
 //     question: 'Why would you use fready?',
 //     answers: [ "University", {
 //         content: "University",
@@ -15,7 +15,7 @@ const end = `
 </div>
 `
 
-freeform.createForm(
+form4free.createForm(
     ["@Persona What are you going to use Fready for?", 
         "$work Work", 
         "$bigbrain My own thing", 
@@ -46,6 +46,7 @@ freeform.createForm(
      this.html(end)
      console.log('DONEE', results)
     })
+    .appendTo('body')
 
 
 // freeform.ask(question).then(answer =>{

@@ -35,12 +35,12 @@ export default [
     input: 'src/index.js',
     //external: ['tippy', 'mousetrap', 'animejs' ],
     output: [{
-      name: 'freeform',
+      name: 'form4free',
       file: pkg.browser,
       format: 'umd'
     }, {
-      name: 'freeform',
-      file: "docs/scripts/freeform.umd.js",
+      name: 'form4free',
+      file: "docs/scripts/form4free.umd.js",
       format: 'umd'
     }],
     plugins: [

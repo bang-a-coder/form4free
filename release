@@ -9,7 +9,7 @@ freeform		publisher
 
 source "./.freeform_env/bin/activate"
 pip install -r .requirements.txt
-yarn install
+npm install
 
 python .release.py
 

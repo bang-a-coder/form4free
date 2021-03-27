@@ -7,7 +7,6 @@ export function createForm(...params){
     console.log(params)
     let form = _p('formPragma')
                     .as(_e('div.form#'))
-                    .appendTo('body')
                     .createEvents('done', 'update', 'start')
 
     let index = 0
