@@ -16,6 +16,10 @@ export function createForm(...params){
         
         // remove previous question
         if (currentQuestion) currentQuestion.element.hide()
+        
+        setTimeout(() => {
+            
+        }, 3000);
 
         currentQuestion = new Question(...question).appendTo(form).on('answer', (ans) => {
             if (index == 0) {form.triggerEvent('started', ans)}

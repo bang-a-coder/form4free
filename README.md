@@ -44,17 +44,7 @@ Blah
 
 ```javascript 
 
-freeform.init()
 freeform.injectStyles()
-
-// freeform.create({
-//     question: 'Why would you use fready?',
-//     answers: [ "University", {
-//         content: "University",
-//         next: {'What discipline?'}
-//     }, 
-// ],
-// })
 
 const end = `
 <div class='end-message'>
@@ -87,8 +77,6 @@ freeform.createForm(
     })
 
 
-// freeform.ask(question).then(answer =>{
-//     freeform.ask(question).then
-// })
+
 
 ```

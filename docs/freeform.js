@@ -30,11 +30,19 @@ freeform.createForm(
         ]]
     ], 
     ["@Problem What are you seeking to improve?", 
-    "$focus Focus", 
-    "$time Time", 
-    "$comprehension Comprehension",
-    "$mountain I don't know"
- ]).on('done', function(results) {
+        "$focus Focus", 
+        "$time Time", 
+        "$comprehension Comprehension",
+        "$mountain I don't know"
+    ],
+    ["@File-Type What document type do you mostly use?",
+        "$pdf PDF",
+        "$google Google Docs",
+        "$epub ePub",
+        "$word MS Word",
+        "$article Online Articles"
+    ]
+    ).on('done', function(results) {
      this.html(end)
      console.log('DONEE', results)
     })
