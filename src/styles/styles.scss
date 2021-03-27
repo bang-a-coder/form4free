@@ -4,7 +4,7 @@
 
 
 body {
-    background-color: black;
+    background-color: #161616;
 
     h1 {
         font-family: 'IBM Plex Mono', monospace;
@@ -29,6 +29,37 @@ body {
         font-family: 'IBM Plex Sans', sans-serif; 
         color: whitesmoke;
         
+    }
+
+    .answer {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        align-items: center;
+        align-content: stretch;
+        font-size: 22px;
+
+        border-radius: 4px;
+        height: fit-content;
+        padding: 10px 10px;
+        margin: 15px 0;
+        background: #262626;
+        cursor: pointer;
+        transition: all 160ms ease;
+
+        &:hover {
+            background: #393939;
+        }
+
+        &.selected {
+            background-color: #2b6cce;
+        }
+        .icon > svg{
+            height: 18px;
+            margin-right: 11px;
+            opacity: .7;
+        }
     }
 
 }

@@ -56,6 +56,7 @@ export class Question extends Pragma {
         this.title
         this.answers = [] 
         this.codeName
+        this.answerLimit = 1 // TODO implement
         this.parseTitle(title)
 
         this.createEvent('answer')
@@ -68,8 +69,6 @@ export class Question extends Pragma {
     }
 
     parseTitle(title){
-        
-        
         const data = parseTag(title, '@')
         if (!data.tag) return this.title=title
 
@@ -78,6 +77,8 @@ export class Question extends Pragma {
     }
 
     createAnswers(answerList){
+
+        const userAnswers = []
         answerList.forEach(element => {
             let content = element
             let subQ
@@ -89,7 +90,11 @@ export class Question extends Pragma {
             self = this
             let answer = Answer(content, subQ)
                             answer.listenTo('click', function(){
-                                self.triggerEvent('answer', answer)
+                                userAnswers.push(answer)
+                                if (userAnswers.length <= self.answerLimit){
+                                    answer.addClass('selected')
+                                    self.triggerEvent('answer', answer)
+                                }
 
                             })
 

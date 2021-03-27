@@ -2,7 +2,6 @@ import {_p,_e, util, Pragma} from 'pragmajs'
 import styles from './styles/styles.json'
 import {Question} from './pragmas/question'
 
-
 export function init(){
     console.log('lick my ass')
 
@@ -18,11 +17,15 @@ export function createForm(...params){
                     .createEvents('done', 'update', 'start')
 
     let index = 0
+    let currentQuestion = null
     function createQ(question){
         
-        let q = new Question(...question).appendTo(form).on('answer', (ans) => {
+        // remove previous question
+        if (currentQuestion) currentQuestion.element.hide()
+
+        currentQuestion = new Question(...question).appendTo(form).on('answer', (ans) => {
             if (index == 0) {form.triggerEvent('started', ans)}
-            results.push({[q.codeName ?? question[0]]: ans.key})
+            results.push({[currentQuestion.codeName ?? question[0]]: ans.key})
             form.triggerEvent('update', results)
             console.log("RESUKTS",results)
             if (index == params.length-1){
@@ -40,10 +43,13 @@ export function createForm(...params){
             console.log('NEXTQ',ans.nextQ)
             index++
 
-             console.log(ans)
+            console.log(ans)
             createQ(params[index]) 
 
         })
+
+
+        currentQuestion.element.show()
     }
 
     createQ(params[0])

@@ -1,6 +1,6 @@
 import { Pragma, _p, _e, util } from 'pragmajs';
 
-var styles = "@charset \"utf-8\";@import url(https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;700&family=IBM+Plex+Sans:wght@300;400;700&display=swap);body{background-color:black}body h1{font-family:'IBM Plex Mono',monospace;color:whitesmoke;font-size:32px;font-weight:400}.parent{height:100vh;width:70%;margin:auto}.quetion{width:fit-content}.quetion .answers{width:80%;font-family:'IBM Plex Sans',sans-serif;color:whitesmoke}";
+var styles = "@charset \"utf-8\";@import url(https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;700&family=IBM+Plex+Sans:wght@300;400;700&display=swap);body{background-color:#161616}body h1{font-family:'IBM Plex Mono',monospace;color:whitesmoke;font-size:32px;font-weight:400}.parent{height:100vh;width:70%;margin:auto}.quetion{width:fit-content}.quetion .answers{width:80%;font-family:'IBM Plex Sans',sans-serif;color:whitesmoke}.quetion .answer{display:flex;flex-direction:row;flex-wrap:nowrap;justify-content:flex-start;align-items:center;align-content:stretch;font-size:22px;border-radius:4px;height:fit-content;padding:10px 10px;margin:15px 0;background:#262626;cursor:pointer;transition:all 160ms ease}.quetion .answer:hover{background:#393939}.quetion .answer.selected{background-color:#2b6cce}.quetion .answer .icon>svg{height:18px;margin-right:11px;opacity:.7}";
 var styles$1 = {
 	styles: styles
 };
@@ -65,6 +65,7 @@ class Question extends Pragma {
         this.title;
         this.answers = []; 
         this.codeName;
+        this.answerLimit = 1; // TODO implement
         this.parseTitle(title);
 
         this.createEvent('answer');
@@ -77,8 +78,6 @@ class Question extends Pragma {
     }
 
     parseTitle(title){
-        
-        
         const data = parseTag(title, '@');
         if (!data.tag) return this.title=title
 
@@ -87,6 +86,8 @@ class Question extends Pragma {
     }
 
     createAnswers(answerList){
+
+        const userAnswers = [];
         answerList.forEach(element => {
             let content = element;
             let subQ;
@@ -98,7 +99,11 @@ class Question extends Pragma {
             self = this;
             let answer = Answer(content, subQ);
                             answer.listenTo('click', function(){
-                                self.triggerEvent('answer', answer);
+                                userAnswers.push(answer);
+                                if (userAnswers.length <= self.answerLimit){
+                                    answer.addClass('selected');
+                                    self.triggerEvent('answer', answer);
+                                }
 
                             });
 
@@ -130,11 +135,15 @@ function createForm(...params){
                     .createEvents('done', 'update', 'start');
 
     let index = 0;
+    let currentQuestion = null;
     function createQ(question){
         
-        let q = new Question(...question).appendTo(form).on('answer', (ans) => {
+        // remove previous question
+        if (currentQuestion) currentQuestion.element.hide();
+
+        currentQuestion = new Question(...question).appendTo(form).on('answer', (ans) => {
             if (index == 0) {form.triggerEvent('started', ans);}
-            results.push({[q.codeName ?? question[0]]: ans.key});
+            results.push({[currentQuestion.codeName ?? question[0]]: ans.key});
             form.triggerEvent('update', results);
             console.log("RESUKTS",results);
             if (index == params.length-1){
@@ -152,10 +161,13 @@ function createForm(...params){
             console.log('NEXTQ',ans.nextQ);
             index++;
 
-             console.log(ans);
+            console.log(ans);
             createQ(params[index]); 
 
         });
+
+
+        currentQuestion.element.show();
     }
 
     createQ(params[0]);
